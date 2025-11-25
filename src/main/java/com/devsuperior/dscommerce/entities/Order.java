@@ -14,6 +14,9 @@ public class Order {
     private Instant moment;
     private OrderStatus status;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
+
     public Order() {
     }
     public Order(Long id, Instant moment, OrderStatus status, User client) {
