@@ -28,9 +28,13 @@ public class OrderService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    AuthService authService;
+
     @Transactional(readOnly = true)
     public OrderDTO findById(Long id) {
         Order order = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        authService.validateUserAdmin(order.getClient().getId());
         return new OrderDTO(order);
     }
 
@@ -50,7 +54,7 @@ public class OrderService {
         // Converte os itens do DTO em entidades OrderItem
         for (OrderItemDTO itemDTO : dto.getItems()) {
             // Obtém uma referência do produto sem acesso imediato ao banco
-            Product product = productRepository.getReferenceById(itemDTO.getproductId());
+            Product product = productRepository.getReferenceById(itemDTO.getProductId());
             // Cria o ‘item’ do pedido com preço capturado no momento da compra
             OrderItem orderItem = new OrderItem(order, product, itemDTO.getQuantity(), product.getPrice());
             order.getItems().add(orderItem);
