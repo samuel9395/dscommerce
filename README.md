@@ -63,9 +63,6 @@ Para testar endpoints protegidos, obtenha um token via o fluxo configurado (ex.:
 - Revise `application.yaml` para ajustar o datasource (H2 em memória ou outro banco).
 - `import.sql` contém dados de exemplo para facilitar testes locais.
 
-## Autor
-Projeto do curso Java Spring Professional — adaptado/estudado por você.
-
 ## Licença
 Consulte o arquivo LICENSE no repositório.
 
