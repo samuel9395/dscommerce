@@ -5,11 +5,10 @@ import com.devsuperior.dscommerce.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -25,5 +24,21 @@ public class OrderController {
     public ResponseEntity<OrderDTO> findById(@PathVariable Long id) {
         OrderDTO dto = service.findById(id);
         return ResponseEntity.ok(dto);
+    }
+
+    // Garante que apenas usuários com perfil CLIENT possam criar pedidos
+    @PreAuthorize("hasAnyRole('ROLE_CLIENT')")
+    @PostMapping
+    public ResponseEntity<OrderDTO> insert(@RequestBody OrderDTO dto) {
+
+        // Delegação da regra de negócio para a camada de serviço
+        dto = service.insert(dto);
+        URI Uri = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(dto.getId())
+                .toUri();
+        // Retorna HTTP 201 (Created) com o corpo e o header Location
+        return ResponseEntity.created(Uri).body(dto);
     }
 }
