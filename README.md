@@ -58,6 +58,23 @@ A API utiliza um Authorization Server e Resource Server para emitir e validar to
 
 Para testar endpoints protegidos, obtenha um token via o fluxo configurado (ex.: password grant personalizado) e envie o header `Authorization: Bearer <token>`.
 
+## Recursos Postman
+
+Coleção Postman e ambiente para facilitar testes e demonstrações estão disponíveis em:
+
+- [src/main/resources/postman/DSCommerce.postman_collection.json](src/main/resources/postman/DSCommerce.postman_collection.json)
+- [src/main/resources/postman/DSCommerce auth.postman_environment.json](src/main/resources/postman/DSCommerce%20auth.postman_environment.json)
+
+Como usar:
+
+1. Abra o Postman e importe a coleção `DSCommerce.postman_collection.json` (Menu > Import).
+2. Importe também o arquivo de ambiente `DSCommerce auth.postman_environment.json` e selecione-o no canto superior direito.
+3. Atualize, se necessário, a variável `base_url` do ambiente para o endereço onde a aplicação está rodando (ex.: `http://localhost:8080`).
+4. Execute a requisição de autenticação (na coleção) para obter o token; um script da coleção armazena o `token` automaticamente nas variáveis de ambiente.
+5. As demais requisições da coleção usam a variável `token` no header `Authorization: Bearer {{token}}`.
+
+Observação: os nomes de arquivos na pasta `src/main/resources/postman` correspondem exatamente à coleção e ambiente exportados pelo Postman.
+
 ## Dicas de desenvolvimento
 - Importe o projeto na sua IDE como projeto Maven.
 - Revise `application.yaml` para ajustar o datasource (H2 em memória ou outro banco).
