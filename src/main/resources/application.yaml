@@ -7,7 +7,7 @@ spring:
     name: dscommerce
 
   profiles:
-    active: ${APP_PROFILE:test}
+    active: ${APP_PROFILE:dev}
 
   jpa:
     open-in-view: false
@@ -67,24 +67,24 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         jdbc:
           lob:
             non_contextual_creation: true
 
-        # ====================================
-        # jakarta:
-        #   persistence:
-        #     schema-generation:
-        #       create-source: metadata
-        #       scripts:
-        #         action: create
-        #         create-target: create.sql
+    # ================INSERÇÃO DE DADOS NO BANCO(‘script’ de criação do banco na pasta do projeto)====================
+      jakarta:
+         persistence:
+           schema-generation:
+             create-source: metadata
+             scripts:
+               action: create
+               create-target: create.sql
 
-        # hbm2ddl:
-        #   delimiter: ";"
+      hbm2ddl:
+         delimiter: ";"
 
 ---
 spring:
@@ -93,7 +93,7 @@ spring:
       on-profile: prod
 
   datasource:
-    url: ${DB_URL}
+    url: ${DATABASE_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 

@@ -1,5 +1,6 @@
 HELP.md
 .data/
+create.sql
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
