@@ -51,6 +51,16 @@
         </dependency>
 
         <!-- ===================== -->
+        <!-- DATABASE POSTGRESQL -->
+        <!-- ===================== -->
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- ===================== -->
         <!-- VALIDATION -->
         <!-- ===================== -->
         <dependency>
