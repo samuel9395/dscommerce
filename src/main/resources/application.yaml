@@ -17,6 +17,7 @@ security:
   client-id: ${CLIENT_ID:myclientid}
   client-secret: ${CLIENT_SECRET:myclientsecret}
   jwt:
+    secret: ${JWT_SECRET:myjwtsecret}
     duration: ${JWT_DURATION:86400} # 86400 = Equivalente a 1 dia
 
 cors:
