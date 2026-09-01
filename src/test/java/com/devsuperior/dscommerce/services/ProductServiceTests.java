@@ -31,8 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 /**
  * Testes unitários do {@link ProductService} cobrindo cenários de sucesso e erro.
  * As dependências externas são mockadas para isolar a regra de negócio.
- */
-public class ProductServiceTests {
+ */ public class ProductServiceTests {
 
     @InjectMocks
     private ProductService service;
