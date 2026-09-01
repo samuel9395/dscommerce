@@ -25,7 +25,7 @@ public class UserService implements UserDetailsService {
     private UserRepository repository;
 
     @Autowired
-    private CustomUserUtil userUtil;
+    private CustomUserUtil customUserUtil;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -48,7 +48,7 @@ public class UserService implements UserDetailsService {
 
     protected User authenticated() {
         try{
-            String username = userUtil.getLoggedUserName();
+            String username = customUserUtil.getLoggedUserName();
             return repository.findByEmail(username).get();
         } catch (Exception e){
             throw new UsernameNotFoundException("Email not found");
