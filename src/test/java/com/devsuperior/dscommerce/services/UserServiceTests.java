@@ -1,5 +1,6 @@
 package com.devsuperior.dscommerce.services;
 
+import com.devsuperior.dscommerce.dto.UserDTO;
 import com.devsuperior.dscommerce.entities.User;
 import com.devsuperior.dscommerce.factory.UserDetailsFactory;
 import com.devsuperior.dscommerce.factory.UserFactory;
@@ -107,4 +108,42 @@ public class UserServiceTests {
         });
     }
 
+    /**
+     * Deve retornar UserDTO quando houver usuário autenticado.
+     * O teste usa spy para simular o retorno de authenticated() e isolar a regra do getUser().
+     */
+    @Test
+    public void getMeShouldReturnUserDTOWhenUserAuthenticated() {
+        // Cria um spy do serviço para controlar apenas o método authenticated().
+        UserService spyUserService = Mockito.spy(service);
+
+        // Simula um usuário autenticado válido retornado pela camada de autenticação.
+        Mockito.doReturn(user).when(spyUserService).authenticated();
+
+        // Executa o método que deve montar o DTO do usuário logado.
+        UserDTO result = spyUserService.getUser();
+
+        // Confirma que o DTO foi criado.
+        Assertions.assertNotNull(result);
+
+        // Confirma que o e-mail no DTO corresponde ao usuário autenticado do cenário.
+        Assertions.assertEquals(existingUserName, result.getEmail());
+    }
+
+    /**
+     * Deve propagar UsernameNotFoundException quando não houver usuário autenticado.
+     */
+    @Test
+    public void getMeShouldThrowUsernameNotFoundExceptionWhenUserDoesNotAuthenticated() {
+        // Cria um spy para forçar falha de autenticação neste cenário.
+        UserService spyUserService = Mockito.spy(service);
+
+        // Simula ausência de usuário autenticado.
+        Mockito.doThrow(UsernameNotFoundException.class).when(spyUserService).authenticated();
+
+        // Valida a regra: sem autenticação, getUser() deve lançar UsernameNotFoundException.
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> {
+            spyUserService.getUser();
+        });
+    }
 }
