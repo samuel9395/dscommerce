@@ -11,11 +11,12 @@ public class AuthService {
     @Autowired
     UserService userService;
 
-    public void validateUserAdmin(long userId) {
-        User user = userService.authenticated();
+    public void validateUserAdmin(Long userId) {
 
-        if (!user.hasRole("ROLE_ADMIN") && !user.getId().equals(userId)) {
-            throw new ForBiddenException("Access denied");
+        User user = userService.authenticated();
+        if (user.hasRole("ROLE_ADMIN")) return;
+        if (!user.getId().equals(userId)) {
+            throw new ForBiddenException("Access denied. Should be self or admin...");
         }
     }
 }
