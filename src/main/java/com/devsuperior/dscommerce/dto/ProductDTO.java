@@ -26,7 +26,7 @@ public class ProductDTO {
     private String imgUrl;
 
     @NotEmpty(message = "At least one category is required.")
-    private List<CategoryDTO> categories =  new ArrayList<>();
+    private List<CategoryDTO> categories = new ArrayList<>();
 
     public ProductDTO(Long id, String name, String description, Double price, String imgUrl) {
         this.id = id;
@@ -51,17 +51,24 @@ public class ProductDTO {
     public Long getId() {
         return id;
     }
+
     public String getName() {
         return name;
     }
+
     public String getDescription() {
         return description;
     }
+
     public Double getPrice() {
         return price;
     }
+
     public String getImgUrl() {
         return imgUrl;
     }
-    public List<CategoryDTO> getCategories() {return categories;}
+
+    public List<CategoryDTO> getCategories() {
+        return categories;
+    }
 }
