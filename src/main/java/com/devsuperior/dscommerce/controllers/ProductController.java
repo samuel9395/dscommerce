@@ -29,14 +29,14 @@ public class ProductController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
-            ProductDTO dto = service.findById(id);
-            return ResponseEntity.ok(dto);
+        ProductDTO dto = service.findById(id);
+        return ResponseEntity.ok(dto);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
-        dto =  service.insert(dto);
+        dto = service.insert(dto);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
