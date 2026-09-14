@@ -14,10 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,6 +35,7 @@ public class ProductControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private Long existingProductId, nonExistingProductId, dependentProductId;
     private String clientUserName, clientPassword, adminUserName, adminPassword;
     private String clientToken, adminToken, invalidToken;
     private String productName;
@@ -50,6 +51,10 @@ public class ProductControllerIT {
         clientPassword = "123456";
         adminUserName = "alex@gmail.com";
         adminPassword = "123456";
+
+        existingProductId = 2L;
+        nonExistingProductId = 100L;
+        dependentProductId = 3L;
 
         adminToken = tokenUtil.obtainAccessToken(mockMvc, adminUserName, adminPassword);
         clientToken = tokenUtil.obtainAccessToken(mockMvc, clientUserName, clientPassword);
@@ -240,6 +245,64 @@ public class ProductControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print());
+
+        result.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void deleteShouldReturnNoContentWhenIdExistsAndAdminLogged() throws Exception {
+
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", existingProductId)
+                        .header("Authorization", "Bearer " + adminToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print());
+
+        result.andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void deleteShouldReturnNotFoundWhenIdExistsAndAdminLogged() throws Exception {
+
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", nonExistingProductId)
+                        .header("Authorization", "Bearer " + adminToken)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print());
+
+        result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void deleteShouldReturnConflictWhenIdExistsAndAdminLogged() throws Exception {
+
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", dependentProductId)
+                        .header("Authorization", "Bearer " + adminToken)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isConflict());
+    }
+
+    @Test
+    public void deleteShouldReturnForbiddenWhenIdExistsAndClientLogged() throws Exception {
+
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", existingProductId)
+                        .header("Authorization", "Bearer " + clientToken)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        result.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void deleteShouldReturnUnauthorizedWhenIdExistsAndInvalidToken() throws Exception {
+
+        ResultActions result = mockMvc
+                .perform(delete("/products/{id}", existingProductId)
+                        .header("Authorization", "Bearer " + invalidToken)
+                        .accept(MediaType.APPLICATION_JSON));
 
         result.andExpect(status().isUnauthorized());
     }
