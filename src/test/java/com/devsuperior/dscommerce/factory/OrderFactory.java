@@ -17,7 +17,7 @@ public class OrderFactory {
      */
     public static Order createOrder(User client) {
         // Cria o pedido principal vinculado ao cliente do cenário.
-        Order order = new Order(1L, Instant.now(), OrderStatus.WAITING_PAYMENT, client);
+        Order order = new Order(1L, Instant.now(), OrderStatus.WAITING_PAYMENT, client, null);
 
         // Adiciona um item para representar pedido com conteúdo válido.
         Product product = ProductFactory.createProduct();
