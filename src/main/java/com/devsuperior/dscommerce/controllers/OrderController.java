@@ -2,6 +2,7 @@ package com.devsuperior.dscommerce.controllers;
 
 import com.devsuperior.dscommerce.dto.OrderDTO;
 import com.devsuperior.dscommerce.services.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,7 +29,7 @@ public class OrderController {
     // Garante que apenas usuários com perfil CLIENT possam criar pedidos
     @PreAuthorize("hasAnyRole('ROLE_CLIENT')")
     @PostMapping
-    public ResponseEntity<OrderDTO> insert(@RequestBody OrderDTO dto) {
+    public ResponseEntity<OrderDTO> insert(@Valid @RequestBody OrderDTO dto) {
 
         // Delegação da regra de negócio para a camada de serviço
         dto = service.insert(dto);
